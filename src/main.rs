@@ -28,7 +28,16 @@ async fn main() {
             name: "earth".to_string() 
         },
         0.02,
-        0.01);
+        0.3);
+    
+    let mut moon = Planet::new(
+        &mut earth.node, 
+        0.02, 
+        0.1, 
+        PlanetAppearance::Color(0.5, 0.5, 0.5),
+        0.10,
+        0.0
+    );
     
     let mut mars = Planet::new(
         &mut scene, 
@@ -43,6 +52,7 @@ async fn main() {
 
         earth.update();
         mars.update();
+        moon.update();
 
     }
 }

@@ -2,8 +2,9 @@ use kiss3d::prelude::*;
 use std::path::Path;
 
 pub struct Planet {
-    orbit_pivot: SceneNode3d,  // pivot around sun
-    body: SceneNode3d,         // the planet
+    pub orbit_pivot: SceneNode3d,  // pivot around sun
+    pub node: SceneNode3d,         // pivot on the planet
+    pub body: SceneNode3d,         // the planet
     orbit_speed: f32,          // speed around sun
     rotation_speed: f32,       // speed rotation on itself
 }
@@ -15,7 +16,7 @@ pub enum PlanetAppearance {
 
 impl Planet {
     pub fn new(
-        scene: &mut SceneNode3d,    
+        parent: &mut SceneNode3d,    
         radius: f32,                    // size of the planet
         distance: f32,                  // distance to the sun
         appearance : PlanetAppearance,  // texture or rgb color
@@ -23,7 +24,7 @@ impl Planet {
         rotation_speed: f32             // day speed
     ) -> Self {
         
-        let mut pivot = scene.add_group();
+        let mut pivot = parent.add_group();
         
         let mut location = pivot.add_group();
         location.translate(Vec3::new(distance, 0.0, 0.0));
@@ -41,6 +42,7 @@ impl Planet {
 
         Planet {
             orbit_pivot: pivot,
+            node: location,
             body: sphere,
             orbit_speed,
             rotation_speed,
