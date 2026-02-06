@@ -1,5 +1,8 @@
-use std::path::Path;
 use kiss3d::prelude::*;
+
+use crate::planet::{Planet, PlanetAppearance};
+
+mod planet;
 
 #[kiss3d::main]
 async fn main() {
@@ -16,34 +19,30 @@ async fn main() {
     let mut sun = scene.add_sphere(0.15);
     sun.set_color(YELLOW);
 
-    let mut earth_pivot = scene.add_group();
-
-    let mut earth = earth_pivot.add_sphere(0.05);
-    earth.set_texture_from_file(Path::new("textures/earth.jpg"), "earth_texture");
-    earth.translate(Vec3::new(0.5, 0.0, 0.0));
-
-    let mut moon_pivot = earth.add_group();
-
-    let mut moon = moon_pivot.add_sphere(0.15);
-    moon.set_color(GRAY);
-    moon.translate(Vec3::new(0.1, 0.0, 0.0));
+    let mut earth = Planet::new(
+        &mut scene,
+        0.05,
+        0.3,
+        PlanetAppearance::Texture { 
+            path: "textures/earth.jpg".to_string(), 
+            name: "earth".to_string() 
+        },
+        0.02,
+        0.01);
+    
+    let mut mars = Planet::new(
+        &mut scene, 
+        0.8, 
+        5.0, 
+        PlanetAppearance::Color(0.8, 0.3, 0.2),
+        0.008,
+        0.09
+    );
 
     while window.render_3d(&mut scene, &mut camera).await {
 
-        earth_pivot.prepend_rotation(Quat::from_axis_angle(
-            Vec3::Y, 
-            0.01
-        ));
-
-        earth.prepend_rotation(Quat::from_axis_angle(
-            Vec3::Y, 
-            0.05 
-        ));
-
-        moon_pivot.prepend_rotation(Quat::from_axis_angle(
-            Vec3::Y, 
-            0.05
-        ));
+        earth.update();
+        mars.update();
 
     }
 }
