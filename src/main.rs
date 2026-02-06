@@ -19,14 +19,24 @@ async fn main() {
 
     let mut earth = earth_pivot.add_sphere(0.05);
     earth.set_color(BLUE);
+    earth.translate(Vec3::new(0.5, 0.0, 0.0));
 
-    earth.translate(Vec3 { x: 0.5, y: 0.0, z: 0.0 });
+    let mut moon_pivot = earth.add_group();
+
+    let mut moon = moon_pivot.add_sphere(0.15);
+    moon.set_color(GRAY);
+    moon.translate(Vec3::new(0.1, 0.0, 0.0));
 
     while window.render_3d(&mut scene, &mut camera).await {
 
         earth_pivot.prepend_rotation(Quat::from_axis_angle(
             Vec3::Y, 
             0.01
+        ));
+
+        moon_pivot.prepend_rotation(Quat::from_axis_angle(
+            Vec3::Y, 
+            0.05
         ));
 
     }
